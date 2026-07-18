@@ -1,6 +1,7 @@
 # KirikiriLike - KiriKiri-style UI for Ren'Py
 
 [![Ren'Py 8.x](https://img.shields.io/badge/Ren'Py-8.x-e34f6f)](https://www.renpy.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/ThanhNhanGit/KirikiriLike?style=flat)](https://github.com/ThanhNhanGit/KirikiriLike/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/ThanhNhanGit/KirikiriLike/master)](https://github.com/ThanhNhanGit/KirikiriLike/commits/master)
 
@@ -8,6 +9,10 @@
 [KiriKiri/KAG](https://en.wikipedia.org/wiki/KiriKiri)-style visual novel controls and UI behavior.
 Copy one folder into your game to get mouse-wheel dialogue controls, a clean backlog, and
 bottom-left character avatars without repeatedly editing `screens.rpy` in every project.
+
+KirikiriLike is an independent community project. It is not affiliated with, sponsored by, or
+endorsed by the KiriKiri/KAG project or the Ren'Py project. The KiriKiri and KAG names describe UI
+inspiration only; no KiriKiri/KAG source code or assets are included.
 
 ## Features
 
@@ -101,10 +106,12 @@ init python:
 The avatar now updates whenever the shown `sylvie` sprite changes attributes. If no matching
 `side sylvie ...` image exists, Ren'Py displays no avatar and does not raise an error.
 
-To change avatar placement, adjust your project's `say` screen:
+Ren'Py's stock `say` screen may inset the avatar with `xoffset 20` and
+`yoffset -20`. To place the avatar flush against the lower-left screen border,
+remove those offsets:
 
 ```renpy
-add SideImage() xalign 0.0 xoffset 20 yalign 1.0 yoffset -20
+add SideImage() xalign 0.0 yalign 1.0
 ```
 
 ## How the mouse-wheel behavior works
@@ -173,6 +180,13 @@ For reusable Ren'Py linting, route tests, UI assertions, and screenshot regressi
 Bug reports and compatibility notes are welcome in
 [GitHub Issues](https://github.com/ThanhNhanGit/KirikiriLike/issues). Please include your Ren'Py
 version, platform, relevant `kkl` settings, and a minimal reproduction when possible.
+
+## License and attribution
+
+KirikiriLike is released under the [MIT License](LICENSE). The History implementation adapts the
+structure of Ren'Py's MIT-licensed stock History screen. See
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the preserved Ren'Py permission notice and
+project-name disclosures.
 
 ## Related documentation
 
