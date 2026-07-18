@@ -101,10 +101,12 @@ init python:
 The avatar now updates whenever the shown `sylvie` sprite changes attributes. If no matching
 `side sylvie ...` image exists, Ren'Py displays no avatar and does not raise an error.
 
-To change avatar placement, adjust your project's `say` screen:
+Ren'Py's stock `say` screen may inset the avatar with `xoffset 20` and
+`yoffset -20`. To place the avatar flush against the lower-left screen border,
+remove those offsets:
 
 ```renpy
-add SideImage() xalign 0.0 xoffset 20 yalign 1.0 yoffset -20
+add SideImage() xalign 0.0 yalign 1.0
 ```
 
 ## How the mouse-wheel behavior works
