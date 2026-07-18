@@ -14,7 +14,7 @@ bottom-left character avatars without repeatedly editing `screens.rpy` in every 
 - **Wheel up opens the dialogue backlog** instead of rolling back.
 - **Wheel down advances dialogue**, similar to KiriKiri visual novels.
 - **Clean History screen** without Ren'Py's left game-menu navigation or divider.
-- **Wheel down closes History** and returns to the live dialogue.
+- **Wheel down scrolls History toward the newest entry**, then returns to the live dialogue at the bottom.
 - **Character side-image avatars** follow the currently shown sprite attributes.
 - **Reusable configuration namespace** - customize behavior through `kkl.*` settings.
 - **Rollback remains available by default** through keyboard/Page Up.
@@ -68,7 +68,7 @@ library files; that keeps upgrades portable between Ren'Py projects.
 | `kkl.side_image_tag` | `None` | Character image tag used for the bottom-left avatar. |
 | `kkl.wheel_up_key` | `"mousedown_4"` | Input that opens the dialogue backlog. |
 | `kkl.wheel_down_key` | `"mousedown_5"` | Input that advances dialogue or closes History. |
-| `kkl.history_closes_on_wheeldown` | `True` | Returns to the game when scrolling down in History. |
+| `kkl.history_closes_on_wheeldown` | `True` | Returns to the game when scrolling down at the newest History entry. |
 | `kkl.history_use_project_styles` | `True` | Reuses the project's stock History and game-menu styles. |
 | `kkl.force_rollback_disabled` | `False` | Completely disables Ren'Py rollback when enabled. |
 
@@ -115,12 +115,15 @@ add SideImage() xalign 0.0 yalign 1.0
 flowchart LR
     U["Wheel up during dialogue"] --> H["Open History backlog"]
     D["Wheel down during dialogue"] --> A["Advance dialogue"]
-    HD["Wheel down in History"] --> R["Return to dialogue"]
+    HD["Wheel down in History"] --> B{"At newest entry?"}
+    B -- "No" --> S["Scroll toward newer entries"]
+    B -- "Yes" --> R["Return to dialogue"]
 ```
 
 The wheel-up binding lives in an always-on overlay and captures the event before Ren'Py's default
-rollback handler. The History screen owns its wheel-down exit binding because normal overlay screens
-are suppressed while a menu is open.
+rollback handler. The History screen owns its wheel-down behavior because normal overlay screens
+are suppressed while a menu is open; it scrolls while newer entries remain and exits only at the
+bottom.
 
 ## Compatibility
 

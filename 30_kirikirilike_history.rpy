@@ -7,7 +7,7 @@
 #
 # Wheel behaviour inside History:
 #   * wheel-up  -> scrolls up into older messages (the vpgrid/viewport handles it)
-#   * wheel-down at the newest entry -> Return() closes History (KiriKiri exit)
+#   * wheel-down -> scrolls toward newer messages, then closes at the bottom
 #
 # To DISABLE this override and restore the stock game-menu History, delete this
 # single file.
@@ -18,6 +18,18 @@ init 999 python:
         # Pick the project's stock style or the library's fallback style,
         # re-evaluated each render so kkl.history_use_project_styles is live.
         return project_style if kkl.history_use_project_styles else fallback_style
+
+
+    class _KKLHistoryWheelDown(Action, DictEquality):
+        """Scroll History down, returning to dialogue only at the bottom."""
+
+        def __call__(self):
+            scroll = Scroll("kkl_history_scroll", "vertical increase")
+
+            if scroll.get_sensitive():
+                return scroll()
+
+            return Return()()
 
 
 init 999 screen history():
@@ -47,6 +59,7 @@ init 999 screen history():
         if gui.history_height:
 
             vpgrid:
+                id "kkl_history_scroll"
                 cols 1
                 yinitial 1.0
 
@@ -83,6 +96,7 @@ init 999 screen history():
         else:
 
             viewport:
+                id "kkl_history_scroll"
                 scrollbars "vertical"
                 mousewheel True
                 draggable True
@@ -119,11 +133,10 @@ init 999 screen history():
         style _kkl_hs("return_button", "kkl_history_return")
         action Return()
 
-    ## Wheel-down closes History. Declared AFTER the frame so it receives the
-    ## wheel event first: wheel-up falls through to the vpgrid (scrolls the log),
-    ## while wheel-down returns to the game.
+    ## Wheel-down scrolls toward newer entries while more content remains, then
+    ## returns to the game on the next wheel-down at the bottom.
     if kkl.enable_wheelnav and kkl.history_closes_on_wheeldown:
-        key kkl.wheel_down_key action Return()
+        key kkl.wheel_down_key action _KKLHistoryWheelDown()
 
 
 ## ---------------------------------------------------------------------------
