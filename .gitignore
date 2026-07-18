@@ -1,0 +1,4 @@
+# Ren'Py compiled bytecode (regenerated automatically)
+*.rpyc
+*.rpymc
+*.rpyb
