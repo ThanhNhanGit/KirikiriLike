@@ -1,4 +1,7 @@
 * text=auto
 *.md text eol=lf
 *.rpy text eol=lf
+*.svg text eol=lf
+*.ttf binary
+*.png binary
 LICENSE text eol=lf

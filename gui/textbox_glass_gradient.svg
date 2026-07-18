@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="4"
+     height="256"
+     viewBox="0 0 4 256"
+     preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="textbox-glass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#071018" stop-opacity="0.42"/>
+      <stop offset="20%" stop-color="#061018" stop-opacity="0.50"/>
+      <stop offset="50%" stop-color="#040a10" stop-opacity="0.62"/>
+      <stop offset="75%" stop-color="#03070b" stop-opacity="0.70"/>
+      <stop offset="100%" stop-color="#010204" stop-opacity="0.78"/>
+    </linearGradient>
+  </defs>
+  <rect width="4" height="256" fill="url(#textbox-glass)"/>
+</svg>

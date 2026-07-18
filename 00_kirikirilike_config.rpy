@@ -33,6 +33,10 @@ init -1 python:
     _kkl_default("enable_wheelnav", True)
     # Let the library set config.side_image_tag from `side_image_tag` below.
     _kkl_default("enable_side_image", True)
+    # Apply the bundled translucent-gradient textbox and Nunito Sans styles.
+    # Opt-in so installing/upgrading KirikiriLike never replaces a project's
+    # existing dialogue presentation unexpectedly.
+    _kkl_default("enable_textbox_template", False)
 
     # --- Side image ----------------------------------------------------------
     # The image tag whose currently-shown sprite drives the bottom-left avatar.
@@ -51,6 +55,52 @@ init -1 python:
     # Reuse the project's stock history_*/game_menu_* styles (True) or the
     # library's own kkl_history_* fallback styles (False, for non-standard GUIs).
     _kkl_default("history_use_project_styles", True)
+
+    # --- Textbox template ----------------------------------------------------
+    # These affect the stock say-screen styles only when
+    # enable_textbox_template is True. Projects can replace any individual
+    # value while keeping the rest of the template.
+    _kkl_default(
+        "textbox_background",
+        "KirikiriLike/gui/textbox_glass_gradient.svg",
+    )
+    _kkl_default("textbox_feather_edges", True)
+    _kkl_default(
+        "textbox_horizontal_edge_mask",
+        "KirikiriLike/gui/textbox_edge_horizontal.svg",
+    )
+    _kkl_default(
+        "textbox_vertical_edge_mask",
+        "KirikiriLike/gui/textbox_edge_vertical.svg",
+    )
+    _kkl_default("textbox_background_opacity", 1.0)
+    _kkl_default("textbox_fallback_background_color", "#010204c7")
+    _kkl_default("textbox_on_small", True)
+    _kkl_default(
+        "textbox_font",
+        "KirikiriLike/fonts/NunitoSans-Regular.ttf",
+    )
+    _kkl_default(
+        "textbox_name_font",
+        "KirikiriLike/fonts/NunitoSans-SemiBold.ttf",
+    )
+    _kkl_default("textbox_fallback_font", "DejaVuSans.ttf")
+    _kkl_default("textbox_text_color", "#f7f9fc")
+    _kkl_default("textbox_name_color", "#ffffff")
+    # Ren'Py outline tuples are (thickness, color, x offset, y offset).
+    # A soft, offset outer layer gives the text depth; the crisp inner layer
+    # keeps the letterforms readable over both bright and dark backgrounds.
+    _kkl_default(
+        "textbox_text_outlines",
+        [(3, "#00000059", 1, 3), (1, "#000000d9", 0, 1)],
+    )
+    _kkl_default(
+        "textbox_name_outlines",
+        [(4, "#00000059", 1, 4), (1, "#000000e6", 0, 1)],
+    )
+    # None removes the separate name plaque for a cleaner glass-panel look.
+    # Set a displayable or image path to retain a custom namebox background.
+    _kkl_default("textbox_namebox_background", None)
 
     # --- Rollback ------------------------------------------------------------
     # The library keeps rollback available by default (wheel-up is captured

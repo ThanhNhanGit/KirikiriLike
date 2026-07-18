@@ -21,6 +21,7 @@ inspiration only; no KiriKiri/KAG source code or assets are included.
 - **Clean History screen** without Ren'Py's left game-menu navigation or divider.
 - **Wheel down scrolls History toward the newest entry**, then returns to the live dialogue at the bottom.
 - **Character side-image avatars** follow the currently shown sprite attributes.
+- **Optional glass-gradient textbox template** with bundled Nunito Sans dialogue fonts.
 - **Reusable configuration namespace** - customize behavior through `kkl.*` settings.
 - **Rollback remains available by default** through keyboard/Page Up.
 - **No Ren'Py engine patching** and no per-project copy/paste screen edits.
@@ -36,7 +37,10 @@ your-game/
         ├── 00_kirikirilike_config.rpy
         ├── 10_kirikirilike_core.rpy
         ├── 20_kirikirilike_wheelnav.rpy
-        └── 30_kirikirilike_history.rpy
+        ├── 30_kirikirilike_history.rpy
+        ├── 40_kirikirilike_textbox.rpy
+        ├── fonts/
+        └── gui/
 ```
 
 Ren'Py automatically loads `.rpy` files under `game/`; no import statement is required.
@@ -59,6 +63,9 @@ init python:
     # These are already True by default; shown for clarity.
     kkl.enable_wheelnav = True
     kkl.history_closes_on_wheeldown = True
+
+    # Optional: translucent bottom gradient + Nunito Sans dialogue text.
+    kkl.enable_textbox_template = True
 ```
 
 Set options at the default init priority (`0`) or any priority below `100`. Do not edit the
@@ -70,12 +77,66 @@ library files; that keeps upgrades portable between Ren'Py projects.
 |---|---:|---|
 | `kkl.enable_wheelnav` | `True` | Wheel up opens History; wheel down advances dialogue. |
 | `kkl.enable_side_image` | `True` | Allows the library to configure `config.side_image_tag`. |
+| `kkl.enable_textbox_template` | `False` | Applies the bundled glass-gradient textbox and Nunito Sans styles. |
 | `kkl.side_image_tag` | `None` | Character image tag used for the bottom-left avatar. |
 | `kkl.wheel_up_key` | `"mousedown_4"` | Input that opens the dialogue backlog. |
 | `kkl.wheel_down_key` | `"mousedown_5"` | Input that advances dialogue or closes History. |
 | `kkl.history_closes_on_wheeldown` | `True` | Returns to the game when scrolling down at the newest History entry. |
 | `kkl.history_use_project_styles` | `True` | Reuses the project's stock History and game-menu styles. |
+| `kkl.textbox_background` | bundled SVG | Resolution-independent textbox gradient image or displayable. |
+| `kkl.textbox_feather_edges` | `True` | Softly fades all four panel edges and corners. |
+| `kkl.textbox_background_opacity` | `1.0` | Multiplier for the gradient panel opacity. |
+| `kkl.textbox_font` | Nunito Sans Regular | Dialogue font path or `FontGroup`. |
+| `kkl.textbox_name_font` | Nunito Sans SemiBold | Speaker-name font path or `FontGroup`. |
+| `kkl.textbox_text_color` | `"#f7f9fc"` | Dialogue text color. |
+| `kkl.textbox_name_color` | `"#ffffff"` | Default speaker-name color; a Character color can still override it. |
+| `kkl.textbox_text_outlines` | layered shadow | Dialogue shadow and crisp readability edge. |
+| `kkl.textbox_name_outlines` | layered shadow | Speaker-name shadow and crisp readability edge. |
+| `kkl.textbox_namebox_background` | `None` | Namebox background; `None` removes the separate plaque. |
+| `kkl.textbox_on_small` | `True` | Applies the template to small/mobile variants too. |
 | `kkl.force_rollback_disabled` | `False` | Completely disables Ren'Py rollback when enabled. |
+
+## Enable the glass-gradient textbox template
+
+The textbox style is opt-in so adding KirikiriLike to an existing game does not unexpectedly
+replace its art direction. Enable it in your project settings:
+
+```renpy
+init python:
+    kkl.enable_textbox_template = True
+```
+
+The template keeps the project's existing textbox height, dialogue position, and text width. It
+changes the standard say-window background to a visible translucent panel with softly feathered
+edges and a smooth top-to-bottom gradient; applies Nunito Sans Regular to dialogue and SemiBold to
+speaker names; removes the separate name plaque; and adds a soft downward text shadow with a crisp
+inner edge for readability.
+
+The SVG gradient and its horizontal/vertical alpha masks are stretched by Ren'Py's `Frame`
+displayable to the actual textbox allocation. Multiplying both masks feathers all four sides and
+the corners, so the panel has no square boundary. The left, right, and bottom masks remain partly
+visible at the viewport boundary, allowing their falloff to continue beyond the clipped screen
+instead of leaving transparent gutters. It scales consistently when a project changes resolution
+or textbox height; no hard-coded `1280x720` layout is required.
+
+Customize only the parts you need:
+
+```renpy
+init python:
+    kkl.enable_textbox_template = True
+    kkl.textbox_background_opacity = 0.85
+    kkl.textbox_text_color = "#ffffff"
+    kkl.textbox_text_outlines = [(3, "#00000059", 1, 3), (1, "#000000d9", 0, 1)]
+    kkl.textbox_namebox_background = Frame("gui/my_namebox.png", 12, 12)
+```
+
+Each outline layer uses Ren'Py's `(thickness, color, x_offset, y_offset)` format. Increase the
+outer layer's offsets for a stronger drop shadow, or set either outline list to `[]` to remove it.
+
+The font settings also accept a Ren'Py `FontGroup`, which is useful when a translation needs
+glyphs outside Nunito Sans's coverage. If a bundled font or gradient file is unavailable, the
+template falls back to `DejaVuSans.ttf` and a translucent solid background instead of failing
+at startup.
 
 ## Add character side-image avatars
 
@@ -133,6 +194,9 @@ bottom.
 ## Compatibility
 
 - Designed for **Ren'Py 8.x** projects using the standard screen architecture.
+- The textbox template targets the standard `window`, `namebox`, `say_dialogue`,
+  `say_thought`, and `say_label` styles. Custom Character style names or a custom say screen
+  must inherit or use those styles to receive the template.
 - Projects with heavily customized History styles can set
   `kkl.history_use_project_styles = False` to use the bundled fallback styles.
 - Mobile variants do not use mouse-wheel navigation; side-image behavior still follows the
@@ -160,6 +224,11 @@ Confirm `kkl.enable_wheelnav` is `True` and that another high-z-order screen is 
 
 Remove `30_kirikirilike_history.rpy`. The remaining wheel and side-image features can stay installed.
 
+### Restore the project's original textbox
+
+Set `kkl.enable_textbox_template = False` or remove `40_kirikirilike_textbox.rpy`. Because the
+feature does not replace `screen say`, no screen code needs to be restored.
+
 ## Project files
 
 | File | Init priority | Purpose |
@@ -168,12 +237,14 @@ Remove `30_kirikirilike_history.rpy`. The remaining wheel and side-image feature
 | `10_kirikirilike_core.rpy` | `100` | Configures side images and optional rollback disabling. |
 | `20_kirikirilike_wheelnav.rpy` | `150` | Captures wheel-up and adds wheel-down dialogue advance. |
 | `30_kirikirilike_history.rpy` | `999` | Replaces the stock History screen with a clean backlog. |
+| `40_kirikirilike_textbox.rpy` | `105` / `110` | Applies the optional gradient and textbox typography styles. |
 
 ## Testing
 
 This library was linted and exercised with Ren'Py 8.5 native testcases. The tests covered dialogue
-advance, History return behavior, navigation removal, and side-image resolution. Real background
-mouse-wheel events were also checked without activating the game window.
+advance, History return behavior, navigation removal, side-image resolution, font application,
+and the textbox gradient's alpha profile. Real background mouse-wheel events were also checked
+without activating the game window.
 
 For reusable Ren'Py linting, route tests, UI assertions, and screenshot regression, see
 [test-renpy-vn](https://github.com/ThanhNhanGit/test-renpy-vn).
@@ -187,9 +258,10 @@ version, platform, relevant `kkl` settings, and a minimal reproduction when poss
 ## License and attribution
 
 KirikiriLike is released under the [MIT License](LICENSE). The History implementation adapts the
-structure of Ren'Py's MIT-licensed stock History screen. See
+structure of Ren'Py's MIT-licensed stock History screen. The bundled Nunito Sans files remain
+under the SIL Open Font License 1.1. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the preserved Ren'Py permission notice and
-project-name disclosures.
+font attribution, permission notices, and project-name disclosures.
 
 ## Related documentation
 

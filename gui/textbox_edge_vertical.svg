@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="4"
+     height="256"
+     viewBox="0 0 4 256"
+     preserveAspectRatio="none">
+  <defs>
+    <!--
+      The free top edge disappears smoothly. The bottom stays at 75% alpha so
+      the panel remains visibly attached to the screen border without a blank
+      strip, while still avoiding a hard rectangular corner.
+    -->
+    <linearGradient id="textbox-vertical-edge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="10%" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="20%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="72%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="90%" stop-color="#ffffff" stop-opacity="0.90"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+  <rect width="4" height="256" fill="url(#textbox-vertical-edge)"/>
+</svg>
