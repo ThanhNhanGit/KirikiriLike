@@ -21,7 +21,7 @@ inspiration only; no KiriKiri/KAG source code or assets are included.
 - **Clean History screen** without Ren'Py's left game-menu navigation or divider.
 - **Wheel down scrolls History toward the newest entry**, then returns to the live dialogue at the bottom.
 - **Character side-image avatars** follow the currently shown sprite attributes.
-- **Optional glass-gradient textbox template** with bundled Nunito Sans dialogue fonts.
+- **Optional glass-gradient textbox template** with bundled Nunito dialogue fonts.
 - **Reusable configuration namespace** - customize behavior through `kkl.*` settings.
 - **Rollback remains available by default** through keyboard/Page Up.
 - **No Ren'Py engine patching** and no per-project copy/paste screen edits.
@@ -57,14 +57,11 @@ Create `game/kkl_settings.rpy` in your project:
 
 ```renpy
 init python:
-    # Replace "sylvie" with your character's image tag.
-    kkl.side_image_tag = "sylvie"
-
     # These are already True by default; shown for clarity.
     kkl.enable_wheelnav = True
     kkl.history_closes_on_wheeldown = True
 
-    # Optional: translucent bottom gradient + Nunito Sans dialogue text.
+    # Optional: translucent bottom gradient + Nunito dialogue text.
     kkl.enable_textbox_template = True
 ```
 
@@ -76,9 +73,9 @@ library files; that keeps upgrades portable between Ren'Py projects.
 | Setting | Default | Purpose |
 |---|---:|---|
 | `kkl.enable_wheelnav` | `True` | Wheel up opens History; wheel down advances dialogue. |
-| `kkl.enable_side_image` | `True` | Allows the library to configure `config.side_image_tag`. |
-| `kkl.enable_textbox_template` | `False` | Applies the bundled glass-gradient textbox and Nunito Sans styles. |
-| `kkl.side_image_tag` | `None` | Character image tag used for the bottom-left avatar. |
+| `kkl.enable_side_image` | `True` | Allows the optional fixed-tag side-image override. |
+| `kkl.enable_textbox_template` | `False` | Applies the bundled glass-gradient textbox and Nunito styles. |
+| `kkl.side_image_tag` | `None` | Leave `None` for speaker-aware avatars; set a tag only to pin one portrait across every line. |
 | `kkl.wheel_up_key` | `"mousedown_4"` | Input that opens the dialogue backlog. |
 | `kkl.wheel_down_key` | `"mousedown_5"` | Input that advances dialogue or closes History. |
 | `kkl.history_closes_on_wheeldown` | `True` | Returns to the game when scrolling down at the newest History entry. |
@@ -86,12 +83,12 @@ library files; that keeps upgrades portable between Ren'Py projects.
 | `kkl.textbox_background` | bundled SVG | Resolution-independent textbox gradient image or displayable. |
 | `kkl.textbox_feather_edges` | `True` | Softly fades all four panel edges and corners. |
 | `kkl.textbox_background_opacity` | `1.0` | Multiplier for the gradient panel opacity. |
-| `kkl.textbox_font` | Nunito Sans Regular | Dialogue font path or `FontGroup`. |
-| `kkl.textbox_name_font` | Nunito Sans SemiBold | Speaker-name font path or `FontGroup`. |
+| `kkl.textbox_font` | Nunito Regular | Dialogue font path or `FontGroup`. |
+| `kkl.textbox_name_font` | Nunito SemiBold | Speaker-name font path or `FontGroup`. |
 | `kkl.textbox_text_color` | `"#f7f9fc"` | Dialogue text color. |
 | `kkl.textbox_name_color` | `"#ffffff"` | Default speaker-name color; a Character color can still override it. |
-| `kkl.textbox_text_outlines` | layered shadow | Dialogue shadow and crisp readability edge. |
-| `kkl.textbox_name_outlines` | layered shadow | Speaker-name shadow and crisp readability edge. |
+| `kkl.textbox_text_outlines` | subtle shadow + 1px edge | Dialogue depth and readability without letter bloat. |
+| `kkl.textbox_name_outlines` | subtle shadow + 1px edge | Speaker-name depth and readability without letter bloat. |
 | `kkl.textbox_namebox_background` | `None` | Namebox background; `None` removes the separate plaque. |
 | `kkl.textbox_on_small` | `True` | Applies the template to small/mobile variants too. |
 | `kkl.force_rollback_disabled` | `False` | Completely disables Ren'Py rollback when enabled. |
@@ -108,9 +105,9 @@ init python:
 
 The template keeps the project's existing textbox height, dialogue position, and text width. It
 changes the standard say-window background to a visible translucent panel with softly feathered
-edges and a smooth top-to-bottom gradient; applies Nunito Sans Regular to dialogue and SemiBold to
-speaker names; removes the separate name plaque; and adds a soft downward text shadow with a crisp
-inner edge for readability.
+edges and a smooth top-to-bottom gradient; applies Nunito Regular to dialogue and SemiBold to
+speaker names; removes the separate name plaque; and adds a low-opacity one-pixel shadow behind a
+thin centered edge without distorting the letter shapes.
 
 The SVG gradient and its horizontal/vertical alpha masks are stretched by Ren'Py's `Frame`
 displayable to the actual textbox allocation. Multiplying both masks feathers all four sides and
@@ -126,15 +123,16 @@ init python:
     kkl.enable_textbox_template = True
     kkl.textbox_background_opacity = 0.85
     kkl.textbox_text_color = "#ffffff"
-    kkl.textbox_text_outlines = [(3, "#00000059", 1, 3), (1, "#000000d9", 0, 1)]
+    kkl.textbox_text_outlines = [(0, "#00000033", 0, 1), (1, "#000000c0", 0, 0)]
     kkl.textbox_namebox_background = Frame("gui/my_namebox.png", 12, 12)
 ```
 
-Each outline layer uses Ren'Py's `(thickness, color, x_offset, y_offset)` format. Increase the
-outer layer's offsets for a stronger drop shadow, or set either outline list to `[]` to remove it.
+Each outline layer uses Ren'Py's `(thickness, color, x_offset, y_offset)` format. A thickness of
+`0` creates the shadow from the original glyph without expanding it; set either outline list to
+`[]` to remove all text effects.
 
 The font settings also accept a Ren'Py `FontGroup`, which is useful when a translation needs
-glyphs outside Nunito Sans's coverage. If a bundled font or gradient file is unavailable, the
+glyphs outside Nunito's coverage. If a bundled font or gradient file is unavailable, the
 template falls back to `DejaVuSans.ttf` and a translucent solid background instead of failing
 at startup.
 
@@ -146,7 +144,7 @@ definition and portrait artwork.
 ### 1. Give the character an image tag
 
 ```renpy
-define s = Character("Sylvie", image_tag="sylvie")
+define s = Character("Sylvie", image="sylvie")
 ```
 
 ### 2. Define side images matching sprite attributes
@@ -157,15 +155,14 @@ image side sylvie green smile = "images/side/side sylvie green smile.png"
 image side sylvie green surprised = "images/side/side sylvie green surprised.png"
 ```
 
-### 3. Select the tag
+That is all the configuration needed. Keep `kkl.side_image_tag = None` (the default).
+The avatar follows Sylvie's shown attributes only while `s` is speaking, and narration or a
+different character has no Sylvie avatar. If no matching `side sylvie ...` image exists, Ren'Py
+displays no avatar and does not raise an error.
 
-```renpy
-init python:
-    kkl.side_image_tag = "sylvie"
-```
-
-The avatar now updates whenever the shown `sylvie` sprite changes attributes. If no matching
-`side sylvie ...` image exists, Ren'Py displays no avatar and does not raise an error.
+Setting `kkl.side_image_tag = "sylvie"` is an advanced fixed-tag override. It deliberately follows
+Sylvie's shown sprite on every line, including narration, so it should not be used for normal
+speaker portraits.
 
 Ren'Py's stock `say` screen may inset the avatar with `xoffset 20` and
 `yoffset -20`. To place the avatar flush against the lower-left screen border,
@@ -206,11 +203,11 @@ bottom.
 
 ### The avatar does not appear
 
-Check all three requirements:
+Check these requirements:
 
-1. The `Character` has `image_tag="..."`.
+1. The `Character` has `image="..."`.
 2. A matching `image side <tag> <attributes>` exists.
-3. `kkl.side_image_tag` uses the same tag.
+3. `kkl.side_image_tag` remains `None` for speaker-aware behavior.
 
 Restart Ren'Py after adding new image files so the image scanner can discover them, or define the
 images explicitly as shown above.
@@ -258,7 +255,7 @@ version, platform, relevant `kkl` settings, and a minimal reproduction when poss
 ## License and attribution
 
 KirikiriLike is released under the [MIT License](LICENSE). The History implementation adapts the
-structure of Ren'Py's MIT-licensed stock History screen. The bundled Nunito Sans files remain
+structure of Ren'Py's MIT-licensed stock History screen. The bundled Nunito files remain
 under the SIL Open Font License 1.1. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the preserved Ren'Py permission notice and
 font attribution, permission notices, and project-name disclosures.

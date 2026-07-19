@@ -8,8 +8,8 @@
 # HOW TO CONFIGURE (in your project, NOT here):
 #
 #     init python:
-#         kkl.side_image_tag = "sylvie"     # enable the bottom-left avatar
 #         kkl.enable_wheelnav = True        # wheel-up = History, wheel-down = advance
+#         # Leave side_image_tag as None for speaker-aware avatars.
 #
 # IMPORTANT: set your knobs at the default init priority (0) or anything below
 # 100. The library reads them at init 100+, so values set at 100+ are ignored.
@@ -31,18 +31,18 @@ init -1 python:
     # --- Master switches -----------------------------------------------------
     # Wheel-up opens History, wheel-down advances dialogue (and closes History).
     _kkl_default("enable_wheelnav", True)
-    # Let the library set config.side_image_tag from `side_image_tag` below.
+    # Allow the optional fixed-tag override described below.
     _kkl_default("enable_side_image", True)
-    # Apply the bundled translucent-gradient textbox and Nunito Sans styles.
+    # Apply the bundled translucent-gradient textbox and Nunito styles.
     # Opt-in so installing/upgrading KirikiriLike never replaces a project's
     # existing dialogue presentation unexpectedly.
     _kkl_default("enable_textbox_template", False)
 
     # --- Side image ----------------------------------------------------------
-    # The image tag whose currently-shown sprite drives the bottom-left avatar.
-    # Leave None to not touch config.side_image_tag. Requires that you also
-    # define `image side <tag> <attrs> = "..."` images and give your Character
-    # image_tag="<tag>". See README.md.
+    # Leave this None for normal speaker-aware behavior. Ren'Py then uses the
+    # active Character's image property, and narration has no avatar. Setting a tag
+    # here intentionally pins the avatar to that shown sprite across all lines,
+    # including narration and dialogue spoken by other characters.
     _kkl_default("side_image_tag", None)
 
     # --- Wheel navigation ----------------------------------------------------
@@ -78,25 +78,26 @@ init -1 python:
     _kkl_default("textbox_on_small", True)
     _kkl_default(
         "textbox_font",
-        "KirikiriLike/fonts/NunitoSans-Regular.ttf",
+        "KirikiriLike/fonts/Nunito-Regular.ttf",
     )
     _kkl_default(
         "textbox_name_font",
-        "KirikiriLike/fonts/NunitoSans-SemiBold.ttf",
+        "KirikiriLike/fonts/Nunito-SemiBold.ttf",
     )
     _kkl_default("textbox_fallback_font", "DejaVuSans.ttf")
     _kkl_default("textbox_text_color", "#f7f9fc")
     _kkl_default("textbox_name_color", "#ffffff")
     # Ren'Py outline tuples are (thickness, color, x offset, y offset).
-    # A soft, offset outer layer gives the text depth; the crisp inner layer
-    # keeps the letterforms readable over both bright and dark backgrounds.
+    # Size 0 makes the first layer a glyph shadow instead of an expanded
+    # outline. Its one-pixel downward offset and 20% opacity keep it subtle;
+    # the centered one-pixel layer supplies the actual readability edge.
     _kkl_default(
         "textbox_text_outlines",
-        [(3, "#00000059", 1, 3), (1, "#000000d9", 0, 1)],
+        [(0, "#00000033", 0, 1), (1, "#000000c0", 0, 0)],
     )
     _kkl_default(
         "textbox_name_outlines",
-        [(4, "#00000059", 1, 4), (1, "#000000e6", 0, 1)],
+        [(0, "#00000033", 0, 1), (1, "#000000cc", 0, 0)],
     )
     # None removes the separate name plaque for a cleaner glass-panel look.
     # Set a displayable or image path to retain a custom namebox background.

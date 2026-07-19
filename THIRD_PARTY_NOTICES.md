@@ -27,17 +27,17 @@ License. The required permission notice is reproduced below.
 The complete current Ren'Py licensing information is available at
 <https://www.renpy.org/doc/html/license.html>.
 
-## Nunito Sans
+## Nunito
 
-The textbox template bundles unmodified static builds of Nunito Sans Regular and SemiBold from
-the Google Fonts Nunito Sans repository at commit
-`058bd7a2f33d6ad5ef1df985b3db403622016a8c`.
+The textbox template bundles unmodified static builds of Nunito Regular and SemiBold from the
+Google Fonts repository at commit
+`c7e2740188205a85323c7385547f6f59b4f2245a`.
 
-Copyright 2016 The Nunito Sans Project Authors
-(<https://github.com/Fonthausen/NunitoSans>).
+Copyright 2014 The Nunito Project Authors
+(<https://github.com/googlefonts/nunito>).
 
 The font software is licensed under the SIL Open Font License, Version 1.1. The complete license
-is included at [fonts/NunitoSans-OFL.txt](fonts/NunitoSans-OFL.txt). Nunito Sans is not covered by
+is included at [fonts/Nunito-OFL.txt](fonts/Nunito-OFL.txt). Nunito is not covered by
 KirikiriLike's MIT License.
 
 ## KiriKiri and KAG
