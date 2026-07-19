@@ -106,8 +106,8 @@ init python:
 The template keeps the project's existing textbox height, dialogue position, and text width. It
 changes the standard say-window background to a visible translucent panel with softly feathered
 edges and a smooth top-to-bottom gradient; applies Nunito Regular to dialogue and SemiBold to
-speaker names; removes the separate name plaque; and adds a low-opacity one-pixel shadow behind a
-thin centered edge without distorting the letter shapes.
+speaker names; removes the separate name plaque; and adds a visible but restrained two-pixel
+downward shadow behind a thin centered edge without distorting the letter shapes.
 
 The SVG gradient and its horizontal/vertical alpha masks are stretched by Ren'Py's `Frame`
 displayable to the actual textbox allocation. Multiplying both masks feathers all four sides and
@@ -123,13 +123,14 @@ init python:
     kkl.enable_textbox_template = True
     kkl.textbox_background_opacity = 0.85
     kkl.textbox_text_color = "#ffffff"
-    kkl.textbox_text_outlines = [(0, "#00000033", 0, 1), (1, "#000000c0", 0, 0)]
+    kkl.textbox_text_outlines = [(0, "#00000066", 0, 2), (1, "#000000c0", 0, 0)]
     kkl.textbox_namebox_background = Frame("gui/my_namebox.png", 12, 12)
 ```
 
 Each outline layer uses Ren'Py's `(thickness, color, x_offset, y_offset)` format. A thickness of
-`0` creates the shadow from the original glyph without expanding it; set either outline list to
-`[]` to remove all text effects.
+`0` creates the shadow from the original glyph without expanding it. The default 2px offset lets
+the shadow extend one pixel past the centered 1px edge; set either outline list to `[]` to remove
+all text effects.
 
 The font settings also accept a Ren'Py `FontGroup`, which is useful when a translation needs
 glyphs outside Nunito's coverage. If a bundled font or gradient file is unavailable, the

@@ -89,15 +89,15 @@ init -1 python:
     _kkl_default("textbox_name_color", "#ffffff")
     # Ren'Py outline tuples are (thickness, color, x offset, y offset).
     # Size 0 makes the first layer a glyph shadow instead of an expanded
-    # outline. Its one-pixel downward offset and 20% opacity keep it subtle;
-    # the centered one-pixel layer supplies the actual readability edge.
+    # outline. Its two-pixel downward offset and 40% opacity leave one visible
+    # shadow pixel below the centered one-pixel readability edge.
     _kkl_default(
         "textbox_text_outlines",
-        [(0, "#00000033", 0, 1), (1, "#000000c0", 0, 0)],
+        [(0, "#00000066", 0, 2), (1, "#000000c0", 0, 0)],
     )
     _kkl_default(
         "textbox_name_outlines",
-        [(0, "#00000033", 0, 1), (1, "#000000cc", 0, 0)],
+        [(0, "#00000066", 0, 2), (1, "#000000cc", 0, 0)],
     )
     # None removes the separate name plaque for a cleaner glass-panel look.
     # Set a displayable or image path to retain a custom namebox background.
